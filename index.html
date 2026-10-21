@@ -435,9 +435,9 @@ class Engine {
 (function () {
   var FA = ['1421495070590369812','1171474815874506864','1484903975307444465','1521890728094208122','1403234492419670038','1492528515860533368','1290952100448305212','1280059534169210896','1483209823486218321','1335221585652613130'],
       FM = ['1549482368530776116','1330544835513552967','1354445745759060215','1350849152136773717','1185971146844291092','1335645303721689168','1561032753619931297'],
-      MEM = ['1335221585652613130','1317016754538549370','1350849152136773717','1485214254536855643','1456621962448208044','1514639241647362059','1462311366441304141','1304035405326192651','1510097560705175603','1436432457636511939'];
+      MEM = ['1335221585652613130','1317016754538549370','1350849152136773717','1485214254536855643','1456621962448208044','1514639241647362059','1462311366441304141','1304035405326192651','1510097560705175603','1436432457636511939','1235485358779797504','1437778933079605288','1495061763094348009'];
   var INV = 'https://discord.gg/eMvFvkMDxW', INVC = 'eMvFvkMDxW', GID = '1492420846290206894', SPL = 'e48f5413aa8c00a75306bdcb3ca58b6a', GNAME = '𝗧𝗿𝗮𝗽𝘄𝘅𝗿𝗲 </𝟮 #lf psm', GDESC = 'pumapatay kami ng mga tanga sa discord.';
-  var ABOUT = 'the founders. more soon.', GANG = 'gang. more soon.';   // edit these two lines
+  var ABOUT = 'the founders. more soon.', GANG = 'tussbros', GINV = 'https://discord.gg/7yWFSMBSrJ', GCODE = '7yWFSMBSrJ', GIMG = 'https://file.garden/am9m147l3hw3nqT1/1791297784284.jpg';   // edit these two lines
   var ALL = FA.concat(FM, MEM), S = {}, CDN = 'https://cdn.discordapp.com/';
   var snd = new Audio('https://file.garden/am9m147l3hw3nqT1/Download%20(10).mp4'), song = new Audio('https://file.garden/am9m147l3hw3nqT1/SLEY%20feat.%20%24leazy%20-%20%24hottas%20(Official%20Lyric%20Video).mp3');
   snd.preload = song.preload = 'auto';
@@ -446,7 +446,9 @@ class Engine {
   var esc = function (s) { return String(s).replace(/[&<>"']/g, function (c) { return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]; }); };
   var def = function (id) { return CDN + 'embed/avatars/' + Number((BigInt(id) >> 22n) % 6n) + '.png'; };
   function grid(l) { return '<div class="grid">' + l.map(function (id, i) { return '<div class="u offline" tabindex="0" role="button" data-id="' + id + '" style="--i:' + i + '"><img class="a" src="' + def(id) + '" alt=""><span class="s"></span></div>'; }).join('') + '</div>'; }
-  var pages = { fathers: grid(FA), mothers: grid(FM), members: grid(MEM), about: '<div class="aw"><p class="tx" style="--i:0">' + esc(ABOUT) + '</p>' + island() + '</div>', gang: '<p class="tx" style="--i:0">' + esc(GANG) + '</p>' };
+  var AI = { key: 'about', name: GNAME, desc: GDESC, inv: INV, code: INVC, live: true, bg: CDN + 'splashes/' + GID + '/' + SPL + '.jpg?size=512' },
+      GI = { key: 'gang', name: GANG, desc: 'friend group', icon: GIMG, inv: GINV, code: GCODE, live: false, bg: GIMG };
+  var pages = { fathers: grid(FA), mothers: grid(FM), members: grid(MEM), about: '<div class="aw"><p class="tx" style="--i:0">' + esc(ABOUT) + '</p>' + island(AI) + '</div>', gang: '<div class="aw">' + island(GI) + '</div>' };
   ro.innerHTML = NAV.map(function (n) { return '<section class="pg' + (n[0] === cur ? ' on' : '') + '" id="p-' + n[0] + '">' + pages[n[0]] + '</section>'; }).join('');
   isl.innerHTML = '<i id="pl"></i>' + NAV.map(function (n, i) { return '<button class="ni' + (i ? '' : ' on') + '" data-p="' + n[0] + '" style="--i:' + i + '">' + n[1] + '</button>'; }).join('');
   var pl = document.getElementById('pl');
@@ -540,34 +542,40 @@ class Engine {
   md.addEventListener('click', function (e) { if (e.target === md || e.target.id === 'mx') closeM(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeM(); });
 
-  /* ── discord server island (about page) ── */
-  function island() {
-    return '<div class="isn" style="--i:1"><div class="dv" id="dv" tabindex="0" role="button" aria-expanded="false"><div class="dbg" style="background-image:url(' + CDN + 'splashes/' + GID + '/' + SPL + '.jpg?size=512)"></div>'
-      + '<div class="dh"><span class="di" id="dI">T</span><span class="dn" id="dN">' + esc(GNAME) + '</span><span class="dd"></span>'
+  /* ── discord server islands (about + gang pages) ── */
+  function island(o) {
+    return '<div class="isn" style="--i:1"><div class="dv" tabindex="0" role="button" aria-expanded="false"><div class="dbg" style="background-image:url(' + o.bg + ')"></div>'
+      + '<div class="dh"><span class="di">' + (o.icon ? '<img src="' + o.icon + '" alt="">' : 'T') + '</span><span class="dn">' + esc(o.name) + '</span><span class="dd"></span>'
       + '<svg class="dc" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></div>'
-      + '<div class="dx"><div class="dy"><p class="dt" style="--k:0">' + esc(GDESC) + '</p><div class="ds" id="dS" style="--k:1"></div>'
-      + '<a class="dj" style="--k:2" href="' + INV + '" target="_blank" rel="noopener">join server</a></div></div></div></div>';
+      + '<div class="dx"><div class="dy">' + (o.desc ? '<p class="dt" style="--k:0">' + esc(o.desc) + '</p>' : '') + '<div class="ds" style="--k:1"></div>'
+      + '<a class="dj" style="--k:2" href="' + o.inv + '" target="_blank" rel="noopener">join server</a></div></div></div></div>';
   }
-  var dv = document.getElementById('dv');
-  function dToggle(o) {
-    var want = o === undefined ? !dv.classList.contains('open') : o;
-    if (want === dv.classList.contains('open')) return;
-    dv.classList.remove('sq'); void dv.offsetWidth; dv.classList.add('sq');
-    dv.classList.toggle('open', want); dv.setAttribute('aria-expanded', want);
+  function setupIsland(o) {
+    var dv = document.querySelector('#p-' + o.key + ' .dv');
+    if (!dv) return;
+    function dToggle(x) {
+      var want = x === undefined ? !dv.classList.contains('open') : x;
+      if (want === dv.classList.contains('open')) return;
+      dv.classList.remove('sq'); void dv.offsetWidth; dv.classList.add('sq');
+      dv.classList.toggle('open', want); dv.setAttribute('aria-expanded', want);
+    }
+    dv.addEventListener('click', function (e) { if (e.target.closest('.dj')) return; if (dv.classList.contains('open') && !e.target.closest('.dh')) return; dToggle(); });
+    dv.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); dToggle(); } });
+    document.addEventListener('click', function (e) { if (!dv.contains(e.target)) dToggle(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') dToggle(false); });
+    fetch('https://discord.com/api/v10/invites/' + o.code + '?with_counts=true').then(function (r) { return r.json(); }).then(function (j) {
+      var g = j && j.guild; if (!g) return;
+      if (o.live) {
+        if (g.name) dv.querySelector('.dn').textContent = g.name;
+        if (g.icon) { var im = new Image(); im.alt = ''; im.src = CDN + 'icons/' + g.id + '/' + g.icon + '.' + (g.icon.indexOf('a_') === 0 ? 'gif' : 'png') + '?size=128'; var di = dv.querySelector('.di'); im.onload = function () { di.textContent = ''; di.appendChild(im); }; }
+      }
+      var m = j.approximate_member_count, on = j.approximate_presence_count, h = '';
+      if (on != null) h += '<span><i></i><b>' + Number(on).toLocaleString() + '</b> online</span>';
+      if (m != null) h += '<span><i class="g"></i><b>' + Number(m).toLocaleString() + '</b> members</span>';
+      dv.querySelector('.ds').innerHTML = h;
+    }).catch(function () {});
   }
-  dv.addEventListener('click', function (e) { if (e.target.closest('.dj')) return; if (dv.classList.contains('open') && !e.target.closest('.dh')) return; dToggle(); });
-  dv.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); dToggle(); } });
-  document.addEventListener('click', function (e) { if (!dv.contains(e.target)) dToggle(false); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') dToggle(false); });
-  fetch('https://discord.com/api/v10/invites/' + INVC + '?with_counts=true').then(function (r) { return r.json(); }).then(function (j) {
-    var g = j && j.guild; if (!g) return;
-    if (g.name) document.getElementById('dN').textContent = g.name;
-    if (g.icon) { var im = new Image(); im.alt = ''; im.src = CDN + 'icons/' + g.id + '/' + g.icon + '.' + (g.icon.indexOf('a_') === 0 ? 'gif' : 'png') + '?size=128'; var di = document.getElementById('dI'); im.onload = function () { di.textContent = ''; di.appendChild(im); }; }
-    var m = j.approximate_member_count, o = j.approximate_presence_count, h = '';
-    if (o != null) h += '<span><i></i><b>' + Number(o).toLocaleString() + '</b> online</span>';
-    if (m != null) h += '<span><i class="g"></i><b>' + Number(m).toLocaleString() + '</b> members</span>';
-    document.getElementById('dS').innerHTML = h;
-  }).catch(function () {});
+  setupIsland(AI); setupIsland(GI);
   function ws() {
     var w = new WebSocket('wss://api.lanyard.rest/socket'), hb;
     w.onmessage = function (m) {
