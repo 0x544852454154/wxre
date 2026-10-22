@@ -82,6 +82,9 @@ background:linear-gradient(180deg,#181b1d,#08090a);border:1px solid rgba(255,255
 
 .aw{margin:auto;display:flex;flex-direction:column;align-items:center;gap:36px}
 .aw.gl{gap:14px}
+/* hide every scrollbar (pages still scroll by touch / wheel / keys) */
+html,body,.pg,.dy,.gal{scrollbar-width:none;-ms-overflow-style:none}
+html::-webkit-scrollbar,body::-webkit-scrollbar,.pg::-webkit-scrollbar,.dy::-webkit-scrollbar,.gal::-webkit-scrollbar{display:none;width:0;height:0}
 .gal{display:flex;flex-direction:column;gap:10px;margin:12px 0 18px}
 .gal a{display:block;border-radius:12px;overflow:hidden;min-height:72px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
 .gal img{display:block;width:100%;height:auto;opacity:0;transition:opacity .45s}
