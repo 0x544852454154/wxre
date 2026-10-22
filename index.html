@@ -81,6 +81,8 @@ background:linear-gradient(180deg,#181b1d,#08090a);border:1px solid rgba(255,255
 .none{color:#5a5f63;font-size:11px}
 
 .aw{margin:auto;display:flex;flex-direction:column;align-items:center;gap:36px}
+.aw.gl{gap:14px}
+.dj.off{background:rgba(255,255,255,.07);color:#80868a;pointer-events:none;box-shadow:none}
 .isn{opacity:0;transform:translateY(18px) scale(.9);filter:blur(8px)}
 .pg.in .isn{animation:up .7s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*70ms)}
 .pg.out .isn{animation:dn .38s cubic-bezier(.5,0,.8,.4) forwards}
@@ -539,8 +541,13 @@ class Engine {
   var def = function (id) { return CDN + 'embed/avatars/' + Number((BigInt(id) >> 22n) % 6n) + '.png'; };
   function grid(l) { return '<div class="grid">' + l.map(function (id, i) { return '<div class="u offline" tabindex="0" role="button" data-id="' + id + '" style="--i:' + i + '"><img class="a" src="' + def(id) + '" alt=""><span class="s"></span></div>'; }).join('') + '</div>'; }
   var AI = { key: 'about', name: GNAME, desc: GDESC, inv: INV, code: INVC, live: true, bg: CDN + 'splashes/' + GID + '/' + SPL + '.jpg?size=512' },
-      GI = { key: 'gang', name: GANG, desc: 'friend group', icon: GIMG, inv: GINV, code: GCODE, live: false, bg: GIMG };
-  var pages = { fathers: grid(FA), mothers: grid(FM), members: grid(MEM), about: '<div class="aw"><p class="tx" style="--i:0">' + esc(ABOUT) + '</p>' + island(AI) + '</div>', gang: '<div class="aw">' + island(GI) + '</div>' };
+      GI = { key: 'gang', ix: 1, i: 1, name: GANG, desc: 'friend group', icon: GIMG, inv: GINV, code: GCODE, live: false, bg: GIMG };
+  AI.ix = 0; AI.i = 1;
+  /* more gangs — [name, invite code, banner url]; icon + member counts load live from the invite (banner too, when none is given) */
+  var GL = [GI].concat([['Trapnyx', 'aatau3vtKv', 'https://file.garden/am9m147l3hw3nqT1/trapnyx.png'], ['Trapnet', 'snUN2g9NS', 'https://file.garden/am9m147l3hw3nqT1/trapnet.jpg'], ['XOTrap', 'sMbBWJRMMh', 'https://file.garden/am9m147l3hw3nqT1/xotrap.png'], ['Mxlrev', 'gc7Pawqzvp', 'https://file.garden/am9m147l3hw3nqT1/mxlrev.png'], ['Spywxre', 'xma5u7xN7Y', 'https://file.garden/am9m147l3hw3nqT1/spywxre.png'], ['Anti', 'y8zgxjEcSY', '']].map(function (g, k) {
+    return { key: 'gang', ix: k + 2, i: k + 2, name: g[0], code: g[1], inv: g[1] ? 'https://discord.gg/' + g[1] : '', live: true, keepName: true, bg: g[2], autoBg: !g[2] };
+  }));
+  var pages = { fathers: grid(FA), mothers: grid(FM), members: grid(MEM), about: '<div class="aw"><p class="tx" style="--i:0">' + esc(ABOUT) + '</p>' + island(AI) + '</div>', gang: '<div class="aw gl">' + GL.map(island).join('') + '</div>' };
   ro.innerHTML = NAV.map(function (n) { return '<section class="pg' + (n[0] === cur ? ' on' : '') + '" id="p-' + n[0] + '">' + pages[n[0]] + '</section>'; }).join('');
   isl.innerHTML = '<i id="pl"></i>' + NAV.map(function (n, i) { return '<button class="ni' + (i ? '' : ' on') + '" data-p="' + n[0] + '" style="--i:' + i + '">' + n[1].replace(/^Founding /, '<span class="lf">Founding </span>') + '</button>'; }).join('');
   var pl = document.getElementById('pl');
@@ -636,14 +643,14 @@ class Engine {
 
   /* ── discord server islands (about + gang pages) ── */
   function island(o) {
-    return '<div class="isn" style="--i:1"><div class="dv" tabindex="0" role="button" aria-expanded="false"><div class="dbg" style="background-image:url(' + o.bg + ')"></div>'
-      + '<div class="dh"><span class="di">' + (o.icon ? '<img src="' + o.icon + '" alt="">' : 'T') + '</span><span class="dn">' + esc(o.name) + '</span><span class="dd"></span>'
+    return '<div class="isn" style="--i:' + (o.i || 1) + '"><div class="dv" data-ix="' + o.ix + '" tabindex="0" role="button" aria-expanded="false"><div class="dbg"' + (o.bg ? ' style="background-image:url(' + o.bg + ')"' : '') + '></div>'
+      + '<div class="dh"><span class="di">' + (o.icon ? '<img src="' + o.icon + '" alt="">' : esc(o.name.charAt(0).toUpperCase())) + '</span><span class="dn">' + esc(o.name) + '</span><span class="dd"></span>'
       + '<svg class="dc" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></div>'
       + '<div class="dx"><div class="dy">' + (o.desc ? '<p class="dt" style="--k:0">' + esc(o.desc) + '</p>' : '') + '<div class="ds" style="--k:1"></div>'
-      + '<a class="dj" style="--k:2" href="' + o.inv + '" target="_blank" rel="noopener">join server</a></div></div></div></div>';
+      + (o.inv ? '<a class="dj" style="--k:2" href="' + o.inv + '" target="_blank" rel="noopener">join server</a>' : '<span class="dj off" style="--k:2">no invite yet</span>') + '</div></div></div></div>';
   }
   function setupIsland(o) {
-    var dv = document.querySelector('#p-' + o.key + ' .dv');
+    var dv = document.querySelector('.dv[data-ix="' + o.ix + '"]');
     if (!dv) return;
     function dToggle(x) {
       var want = x === undefined ? !dv.classList.contains('open') : x;
@@ -655,11 +662,16 @@ class Engine {
     dv.addEventListener('keydown', function (e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); e.stopPropagation(); dToggle(); } });
     document.addEventListener('click', function (e) { if (!dv.contains(e.target)) dToggle(false); });
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') dToggle(false); });
+    if (!o.code) return;
     fetch('https://discord.com/api/v10/invites/' + o.code + '?with_counts=true').then(function (r) { return r.json(); }).then(function (j) {
       var g = j && j.guild; if (!g) return;
       if (o.live) {
-        if (g.name) dv.querySelector('.dn').textContent = g.name;
+        if (g.name && !o.keepName) dv.querySelector('.dn').textContent = g.name;
         if (g.icon) { var im = new Image(); im.alt = ''; im.src = CDN + 'icons/' + g.id + '/' + g.icon + '.' + (g.icon.indexOf('a_') === 0 ? 'gif' : 'png') + '?size=128'; var di = dv.querySelector('.di'); im.onload = function () { di.textContent = ''; di.appendChild(im); }; }
+      }
+      if (o.autoBg) {
+        var bu = g.splash ? CDN + 'splashes/' + g.id + '/' + g.splash + '.jpg?size=512' : (g.banner ? CDN + 'banners/' + g.id + '/' + g.banner + '.jpg?size=512' : (g.icon ? CDN + 'icons/' + g.id + '/' + g.icon + '.png?size=256' : ''));
+        if (bu) dv.querySelector('.dbg').style.backgroundImage = 'url(' + bu + ')';
       }
       var m = j.approximate_member_count, on = j.approximate_presence_count, h = '';
       if (on != null) h += '<span><i></i><b>' + Number(on).toLocaleString() + '</b> online</span>';
@@ -667,7 +679,7 @@ class Engine {
       dv.querySelector('.ds').innerHTML = h;
     }).catch(function () {});
   }
-  setupIsland(AI); setupIsland(GI);
+  setupIsland(AI); GL.forEach(setupIsland);
   function ws() {
     var w = new WebSocket('wss://api.lanyard.rest/socket'), hb;
     w.onmessage = function (m) {
