@@ -82,6 +82,9 @@ background:linear-gradient(180deg,#181b1d,#08090a);border:1px solid rgba(255,255
 
 .aw{margin:auto;display:flex;flex-direction:column;align-items:center;gap:36px}
 .aw.gl{gap:14px}
+.gal{display:flex;flex-direction:column;gap:10px;margin:12px 0 18px}
+.gal a{display:block;border-radius:12px;overflow:hidden;min-height:72px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06)}
+.gal img{display:block;width:100%;height:auto;opacity:0;transition:opacity .45s}
 .dj.off{background:rgba(255,255,255,.07);color:#80868a;pointer-events:none;box-shadow:none}
 .isn{opacity:0;transform:translateY(18px) scale(.9);filter:blur(8px)}
 .pg.in .isn{animation:up .7s cubic-bezier(.2,.8,.2,1) forwards;animation-delay:calc(var(--i)*70ms)}
@@ -527,9 +530,9 @@ class Engine {
 </script>
 <script>
 (function () {
-  var FA = ['1421495070590369812','1335221585652613130','1521890728094208122','1171474815874506864','1484903975307444465','1403234492419670038','1492528515860533368','1290952100448305212','1280059534169210896','1483209823486218321'],
+  var FA = ['1421495070590369812','1335221585652613130','1521890728094208122','1171474815874506864','1484903975307444465','1403234492419670038','1290952100448305212','1280059534169210896','1483209823486218321'],
       FM = ['1549482368530776116','1364308423037947904','1350849152136773717','1330544835513552967','1354445745759060215','1185971146844291092','1335645303721689168','1561032753619931297','1248910763494473728'],
-      MEM = ['1335221585652613130','1317016754538549370','1350849152136773717','1485214254536855643','1456621962448208044','1514639241647362059','1462311366441304141','1304035405326192651','1510097560705175603','1436432457636511939','1235485358779797504','1437778933079605288','1495061763094348009'];
+      MEM = ['1335221585652613130','1317016754538549370','1350849152136773717','1485214254536855643','1456621962448208044','1514639241647362059','1462311366441304141','1304035405326192651','1510097560705175603','1436432457636511939','1235485358779797504','1437778933079605288','1495061763094348009','1510339992474357962','1512675636521734246','1551542784794693671'];
   var INV = 'https://discord.gg/eMvFvkMDxW', INVC = 'eMvFvkMDxW', GID = '1492420846290206894', SPL = 'e48f5413aa8c00a75306bdcb3ca58b6a', GNAME = '𝗧𝗿𝗮𝗽𝘄𝘅𝗿𝗲 </𝟮 #lf psm', GDESC = 'pumapatay kami ng mga tanga sa discord.';
   var ABOUT = 'the founders. more soon.', GANG = 'tussbros', GINV = 'https://discord.gg/7yWFSMBSrJ', GCODE = '7yWFSMBSrJ', GIMG = 'https://file.garden/am9m147l3hw3nqT1/1791297784284.jpg';   // edit these two lines
   var ALL = FA.concat(FM, MEM), S = {}, CDN = 'https://cdn.discordapp.com/';
@@ -543,11 +546,12 @@ class Engine {
   var AI = { key: 'about', name: GNAME, desc: GDESC, inv: INV, code: INVC, live: true, bg: CDN + 'splashes/' + GID + '/' + SPL + '.jpg?size=512' },
       GI = { key: 'gang', ix: 1, i: 1, name: GANG, desc: 'friend group', icon: GIMG, inv: GINV, code: GCODE, live: false, bg: GIMG };
   AI.ix = 0; AI.i = 1;
+  var BI = { key: 'about', ix: 100, i: 2, name: 'banners', icon: 'https://file.garden/am9m147l3hw3nqT1/trap1.png', gal: ['https://file.garden/am9m147l3hw3nqT1/trap1.png','https://file.garden/am9m147l3hw3nqT1/trap2.jpg','https://file.garden/am9m147l3hw3nqT1/trap3.png','https://file.garden/am9m147l3hw3nqT1/trap4.png','https://file.garden/am9m147l3hw3nqT1/trap5.jpg'] };
   /* more gangs — [name, invite code, banner url]; icon + member counts load live from the invite (banner too, when none is given) */
   var GL = [GI].concat([['Trapnyx', 'aatau3vtKv', 'https://file.garden/am9m147l3hw3nqT1/trapnyx.png'], ['Trapnet', 'snUN2g9NS', 'https://file.garden/am9m147l3hw3nqT1/trapnet.jpg'], ['XOTrap', 'sMbBWJRMMh', 'https://file.garden/am9m147l3hw3nqT1/xotrap.png'], ['Mxlrev', 'gc7Pawqzvp', 'https://file.garden/am9m147l3hw3nqT1/mxlrev.png'], ['Spywxre', 'xma5u7xN7Y', 'https://file.garden/am9m147l3hw3nqT1/spywxre.png'], ['Anti', 'y8zgxjEcSY', '']].map(function (g, k) {
     return { key: 'gang', ix: k + 2, i: k + 2, name: g[0], code: g[1], inv: g[1] ? 'https://discord.gg/' + g[1] : '', live: true, keepName: true, bg: g[2], autoBg: !g[2] };
   }));
-  var pages = { fathers: grid(FA), mothers: grid(FM), members: grid(MEM), about: '<div class="aw"><p class="tx" style="--i:0">' + esc(ABOUT) + '</p>' + island(AI) + '</div>', gang: '<div class="aw gl">' + GL.map(island).join('') + '</div>' };
+  var pages = { fathers: grid(FA), mothers: grid(FM), members: grid(MEM), about: '<div class="aw"><p class="tx" style="--i:0">' + esc(ABOUT) + '</p>' + island(AI) + island(BI) + '</div>', gang: '<div class="aw gl">' + GL.map(island).join('') + '</div>' };
   ro.innerHTML = NAV.map(function (n) { return '<section class="pg' + (n[0] === cur ? ' on' : '') + '" id="p-' + n[0] + '">' + pages[n[0]] + '</section>'; }).join('');
   isl.innerHTML = '<i id="pl"></i>' + NAV.map(function (n, i) { return '<button class="ni' + (i ? '' : ' on') + '" data-p="' + n[0] + '" style="--i:' + i + '">' + n[1].replace(/^Founding /, '<span class="lf">Founding </span>') + '</button>'; }).join('');
   var pl = document.getElementById('pl');
@@ -646,8 +650,8 @@ class Engine {
     return '<div class="isn" style="--i:' + (o.i || 1) + '"><div class="dv" data-ix="' + o.ix + '" tabindex="0" role="button" aria-expanded="false"><div class="dbg"' + (o.bg ? ' style="background-image:url(' + o.bg + ')"' : '') + '></div>'
       + '<div class="dh"><span class="di">' + (o.icon ? '<img src="' + o.icon + '" alt="">' : esc(o.name.charAt(0).toUpperCase())) + '</span><span class="dn">' + esc(o.name) + '</span><span class="dd"></span>'
       + '<svg class="dc" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 4.5 6 8l3.5-3.5"/></svg></div>'
-      + '<div class="dx"><div class="dy">' + (o.desc ? '<p class="dt" style="--k:0">' + esc(o.desc) + '</p>' : '') + '<div class="ds" style="--k:1"></div>'
-      + (o.inv ? '<a class="dj" style="--k:2" href="' + o.inv + '" target="_blank" rel="noopener">join server</a>' : '<span class="dj off" style="--k:2">no invite yet</span>') + '</div></div></div></div>';
+      + '<div class="dx"><div class="dy">' + (o.gal ? '<div class="gal" style="--k:0">' + o.gal.map(function (u) { return '<a href="' + u + '" target="_blank" rel="noopener"><img src="' + u + '" alt="" loading="lazy" onload="this.style.opacity=1"></a>'; }).join('') + '</div>' : '') + (o.desc ? '<p class="dt" style="--k:0">' + esc(o.desc) + '</p>' : '') + '<div class="ds" style="--k:1"></div>'
+      + (o.gal ? '' : o.inv ? '<a class="dj" style="--k:2" href="' + o.inv + '" target="_blank" rel="noopener">join server</a>' : '<span class="dj off" style="--k:2">no invite yet</span>') + '</div></div></div></div>';
   }
   function setupIsland(o) {
     var dv = document.querySelector('.dv[data-ix="' + o.ix + '"]');
@@ -679,7 +683,7 @@ class Engine {
       dv.querySelector('.ds').innerHTML = h;
     }).catch(function () {});
   }
-  setupIsland(AI); GL.forEach(setupIsland);
+  setupIsland(AI); setupIsland(BI); GL.forEach(setupIsland);
   function ws() {
     var w = new WebSocket('wss://api.lanyard.rest/socket'), hb;
     w.onmessage = function (m) {
